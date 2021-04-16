@@ -1,0 +1,70 @@
+version: '3'
+services:
+  envoy:
+    restart: always
+    image: envoyproxy/envoy-dev:e2eebec1536ce7dc4af8a47ea00f2ae0d6381e63
+    ports:
+      - "9786:9786"
+      - "9901:9901"
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml
+      - ./resolv.conf:/etc/resolv.conf
+    networks:
+      test:
+        ipv4_address: 192.168.69.2
+  sidecar:
+    restart: always
+    image: envoyproxy/envoy-dev:e2eebec1536ce7dc4af8a47ea00f2ae0d6381e63
+    ports:
+      - "9902:9901"
+    volumes:
+      - ./sidecar.yaml:/etc/envoy/envoy.yaml
+    networks:
+      test:
+        ipv4_address: 192.168.69.3
+  server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      SRVNAME: 'server1'
+    networks:
+      test:
+        ipv4_address: 192.168.69.100
+  sidecar2:
+    restart: always
+    image: envoyproxy/envoy-dev:e2eebec1536ce7dc4af8a47ea00f2ae0d6381e63
+    ports:
+      - "9903:9901"
+    volumes:
+      - ./sidecar2.yaml:/etc/envoy/envoy.yaml
+    networks:
+      test:
+        ipv4_address: 192.168.69.4
+  server2:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      SRVNAME: 'server2'
+    networks:
+      test:
+        ipv4_address: 192.168.69.101
+  dns:
+    restart: always
+    image: strm/dnsmasq
+    volumes:
+      - ./dnsmasq.conf:/etc/dnsmasq.conf
+      - ./hosts:/etc/masqhosts
+    cap_add:
+      - NET_ADMIN
+    networks:
+      test:
+        ipv4_address: 192.168.69.5
+networks:
+  test:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.69.0/24
