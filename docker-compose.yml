@@ -9,6 +9,7 @@ services:
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
       - ./resolv.conf:/etc/resolv.conf
+    entrypoint: envoy -c /etc/envoy/envoy.yaml -l trace
     networks:
       test:
         ipv4_address: 192.168.69.2
@@ -19,6 +20,7 @@ services:
       - "9902:9901"
     volumes:
       - ./sidecar.yaml:/etc/envoy/envoy.yaml
+    entrypoint: envoy -c /etc/envoy/envoy.yaml -l trace
     networks:
       test:
         ipv4_address: 192.168.69.3

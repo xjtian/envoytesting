@@ -1,8 +1,15 @@
-2 upstream application containers with sidecars + 1 ingress Envoy.
-Cluster membership is resolved with DNS using dnsmasq.
+Ingress envoy -> sidecar envoy -> backend workload.
 
-Edit main.go to make the applications do whatever you want.
+Backend handler sleeps 10 seconds before writing response.
 
 ```
-curl localhost:9786/app
+$ docker-compose up -d
+$ curl localhost:9786/app
+
+# In a different terminal instance, kill the backend:
+$ docker-compose stop server
+
+# the curl will output:
+
+  upstream connect error or disconnect/reset before headers. reset reason: connection termination
 ```
