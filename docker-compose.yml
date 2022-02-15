@@ -9,6 +9,7 @@ services:
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
       - ./resolv.conf:/etc/resolv.conf
+      - ./mtls/certs:/etc/envoy/certs
     networks:
       test:
         ipv4_address: 192.168.69.2
@@ -19,6 +20,7 @@ services:
       - "9902:9901"
     volumes:
       - ./sidecar.yaml:/etc/envoy/envoy.yaml
+      - ./mtls/certs:/etc/envoy/certs
     networks:
       test:
         ipv4_address: 192.168.69.3
@@ -38,6 +40,7 @@ services:
       - "9903:9901"
     volumes:
       - ./sidecar2.yaml:/etc/envoy/envoy.yaml
+      - ./mtls/certs:/etc/envoy/certs
     networks:
       test:
         ipv4_address: 192.168.69.4

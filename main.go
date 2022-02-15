@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"time"
 )
 
 func handler(w http.ResponseWriter, _ *http.Request) {
 	fmt.Println("app handler")
 	n, _ := os.LookupEnv("SRVNAME")
-	time.Sleep(10*time.Second)
 	_, _ = fmt.Fprintf(w, "Hello %s\n", n)
 }
 
